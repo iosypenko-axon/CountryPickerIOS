@@ -10,6 +10,7 @@ import UIKit
 
 public struct Country {
     public var name: String
+    public var localizedName: String
     public var code: String
     public var phoneCode: String
     public var flag: UIImage {
@@ -20,6 +21,11 @@ public struct Country {
     internal init(name: String, code: String, phoneCode: String) {
         self.name = name
         self.code = code
+        if let localizedCountryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: code) {
+            self.localizedName = localizedCountryName
+        } else {
+            self.localizedName = name
+        }
         self.phoneCode = phoneCode
     }
 }
