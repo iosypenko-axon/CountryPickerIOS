@@ -47,7 +47,7 @@ public struct CountryModel {
         //unique headers for section
         var header = Set<String>()
         countries.forEach {
-            let name = $0.name
+            let name = $0.localizedName
             header.insert(String(name[name.startIndex]).uppercased())
         }
         
@@ -55,7 +55,7 @@ public struct CountryModel {
         
         //sorted countries by headers
         countries.forEach({
-            let name = $0.name
+            let name = $0.localizedName
             let index = String(name[name.startIndex])
             var dictValue = alphabeticDict[index] ?? [Country]()
             dictValue.append($0)
@@ -65,7 +65,7 @@ public struct CountryModel {
         
         // Sort the sections
         alphabeticDict.forEach { key, value in
-            alphabeticDict[key] = value.sorted {$0.name < $1.name}
+            alphabeticDict[key] = value.sorted {$0.localizedName < $1.localizedName}
         }
         return alphabeticDict
     }
@@ -77,7 +77,7 @@ public struct CountryModel {
         let countryArray = Array(alphabeticCountries).sorted { $0.key  < $1.key }
 
         guard let section = countryArray.index(where: { $0.key == header }) else { return nil}
-        guard let row = alphabeticCountries[header]?.index(where: { $0.name.lowercased() == countryName.lowercased()}) else { return nil}
+        guard let row = alphabeticCountries[header]?.index(where: { $0.localizedName.lowercased() == countryName.lowercased()}) else { return nil}
         
         return IndexPath(row: row, section: section)
     }
@@ -87,6 +87,6 @@ public struct CountryModel {
         let alphabeticCountries = countriesAlphabetic()
         guard let array = alphabeticCountries[String(name[name.startIndex]).uppercased()] else { return  [Country]() }
         
-        return array.filter({ $0.name.lowercased().hasPrefix(name.lowercased())})
+        return array.filter({ $0.localizedName.lowercased().hasPrefix(name.lowercased())})
     }
 }

@@ -87,7 +87,7 @@ extension CountryPickerList {
     
     private func scrollToSelectedCountry() {
         if !isSearchMode {
-            let countryName = output.getSelectedCountry().name
+            let countryName = output.getSelectedCountry().localizedName
             guard let indexPath = countryModel.getCountryPosition(countryName: countryName) else { return }
             
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -113,7 +113,7 @@ extension CountryPickerList {
             : countries[sectionsTitles[indexPath.section]]![indexPath.row]
         
         cell.imageView?.image = country.flag
-        cell.textLabel?.text = country.name
+        cell.textLabel?.text = country.localizedName
         cell.accessoryType = country == output.getSelectedCountry() ? .checkmark : .none
         cell.separatorInset = .zero
         
