@@ -22,12 +22,11 @@ public class CountryPickerList: UITableViewController {
     private var sectionsTitles = [String]()
     private var countries = [String: [Country]]()
     private var countryModel: CountryModel!
-    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchController: UISearchController! = UISearchController(searchResultsController: nil)
     private var presentationStyle: PresentationStyle = .pushed
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         countryModel = output.getCountryModel()
         definePresentationStyle()
         prepareTableItems()
@@ -40,6 +39,7 @@ public class CountryPickerList: UITableViewController {
         
         //add search bar with animation
         prepareSearchBar()
+        definesPresentationContext = true
         UIView.animate(withDuration: 0.2) { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.navigationController?.view.layoutSubviews()
@@ -49,10 +49,10 @@ public class CountryPickerList: UITableViewController {
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         //fix bag with black line on IOS 11.0+ that appears after pop
         navigationController?.view.layoutSubviews()
     }
+    
 }
 
 // MARK: - Private
@@ -71,7 +71,6 @@ extension CountryPickerList {
     private func prepareSearchBar() {
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = true
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
         
@@ -139,11 +138,13 @@ extension CountryPickerList {
         let country = isSearchMode ? searchResults[indexPath.row]
             : countries[sectionsTitles[indexPath.section]]![indexPath.row]
         output.didSelectCountry(country)
-        
         switch presentationStyle {
         case .presented:
             dismiss(animated: true, completion: nil)
         case .pushed:
+            searchController.searchResultsUpdater = nil
+            searchController.searchBar.delegate = nil
+            searchController.isActive = false
             navigationController?.popViewController(animated: true)
         }
     }
@@ -156,7 +157,6 @@ extension CountryPickerList: UISearchResultsUpdating {
         if let text = searchController.searchBar.text, text.count > 0 {
             isSearchMode = true
             searchResults.removeAll()
-
             searchResults.append(contentsOf: countryModel.getCountries(byName: text))
         }
         tableView.reloadData()
@@ -171,7 +171,6 @@ extension CountryPickerList: UISearchBarDelegate {
     
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         // Show the back/left navigationItem button
-        
         if presentationStyle == .presented {
             dismiss(animated: true, completion: nil)
         }
