@@ -22,7 +22,7 @@ public class CountryPickerList: UITableViewController {
     private var sectionsTitles = [String]()
     private var countries = [String: [Country]]()
     private var countryModel: CountryModel!
-    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchController: UISearchController! = UISearchController(searchResultsController: nil)
     private var presentationStyle: PresentationStyle = .pushed
     
     public override func viewDidLoad() {
@@ -144,6 +144,7 @@ extension CountryPickerList {
         case .presented:
             dismiss(animated: true, completion: nil)
         case .pushed:
+            searchController = nil
             navigationController?.popViewController(animated: true)
         }
     }
