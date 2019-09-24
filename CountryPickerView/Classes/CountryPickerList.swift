@@ -22,7 +22,7 @@ public class CountryPickerList: UITableViewController {
     private var sectionsTitles = [String]()
     private var countries = [String: [Country]]()
     private var countryModel: CountryModel!
-    private var searchController: UISearchController! = UISearchController(searchResultsController: nil)
+    private let searchController = UISearchController(searchResultsController: nil)
     private var presentationStyle: PresentationStyle = .pushed
     
     public override func viewDidLoad() {
